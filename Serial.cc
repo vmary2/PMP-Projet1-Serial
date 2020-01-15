@@ -104,12 +104,22 @@ IBinaryFile& operator>>(IBinaryFile& file, char& x){
     x = std::to_integer<char>(t);
     return file;
 }
-IBinaryFile& operator>>(IBinaryFile& file, float& x);
-IBinaryFile& operator>>(IBinaryFile& file, double& x);
+IBinaryFile& operator>>(IBinaryFile& file, float& x){
+    // On récupère le binaire du float stockés dans un entier 32 bits
+    uint32_t raw; file >> raw;
+    x = (float)raw;
+    return file;
+}
+IBinaryFile& operator>>(IBinaryFile& file, double& x){
+    // On récupère le binaire du float stockés dans un entier 64 bits
+    uint64_t raw; file >> raw;
+    x = (double)raw;
+    return file;
+}
 IBinaryFile& operator>>(IBinaryFile& file, bool& x){
     std::byte ret;
     file.read(&ret, 1);
-    x = (std::to_integer<char>(ret) != 0);
+    x = std::to_integer<bool>(ret);
     return file;
 }
 IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
