@@ -142,9 +142,13 @@ namespace serial {
 
   template<typename T>
   IBinaryFile& operator>>(IBinaryFile& file, std::vector<T>& x) {
-    T tmp;
-    std::size_t actuallyRead = file.read(&tmp, sizeof(T));
-    x.push_back(tmp);
+    // Number of items in the collection
+    uint64_t sz; file >> sz;
+    T item;
+    for(uint64_t i = 0 ; i < sz ; i++){
+        file >> item;
+        x.push_back(item);
+    }
     return file;
   }
 
