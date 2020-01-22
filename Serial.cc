@@ -1,13 +1,13 @@
 #include "Serial.h"
 #include <cstring>
 
+static_assert(sizeof(float) == sizeof(uint32_t) && sizeof(double) == sizeof(uint64_t));
+
 namespace serial {
-/***********************************************************
- *                    IBinaryFile
- ***********************************************************/
-/***********************************************************
- *                      RULE OF FIVE
- ***********************************************************/
+
+/**********************************************************************************
+ *                                   RULE OF FIVE
+ **********************************************************************************/
 
 IBinaryFile::IBinaryFile(const std::string& filename)
     : m_file(std::fopen(filename.c_str(), "rb")){
@@ -30,9 +30,9 @@ IBinaryFile& IBinaryFile::operator=(IBinaryFile&& other) noexcept{
 }
 
 
-/***********************************************************
- *                            READ UTILITY
- ***********************************************************/
+/**********************************************************************************
+ *                                  READ UTILITY
+ **********************************************************************************/
 
 
 std::size_t IBinaryFile::read(std::byte* data, std::size_t size){
@@ -40,9 +40,9 @@ std::size_t IBinaryFile::read(std::byte* data, std::size_t size){
 }
 
 
-/***********************************************************
- *                            READ OPERATORS
- ***********************************************************/
+/**********************************************************************************
+ *                                 READ OPERATORS
+ **********************************************************************************/
 
 
 IBinaryFile& operator>>(IBinaryFile& file, int8_t& x){
@@ -120,8 +120,6 @@ IBinaryFile& operator>>(IBinaryFile& file, double& x){
     uint64_t raw; file >> raw;
     double rawd;
     std::memcpy(&rawd, &raw, sizeof(uint64_t));
-    printf("Raw value after serial: %x\n", raw);
-    printf("Rawd value after serial: %f\n", rawd);
     x = rawd;
     return file;
 }
@@ -278,7 +276,6 @@ OBinaryFile& operator<<(OBinaryFile& file, bool x){
 
 OBinaryFile& operator<<(OBinaryFile& file, const std::string& x){
     uint64_t size = x.size() +1;
-    printf("Size : %zu\n", size);
     file << size;
     for(std::size_t i = 0; i < size; i ++){
         file << x[i]; 
