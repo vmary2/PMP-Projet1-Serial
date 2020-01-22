@@ -133,7 +133,6 @@ IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
     // Read the size of the string
     uint64_t sz; 
     file >> sz;
-    printf("sz = %zu\n", sz);
     char tmp[sz];
     // Creation of the C string byte per byte including the final '\0'
     for(uint64_t i = 0 ; i < sz ; i++){
@@ -181,70 +180,70 @@ std::size_t OBinaryFile::write(const std::byte* data, std::size_t size){
  ***********************************************************/
 
 OBinaryFile& operator<<(OBinaryFile& file, uint8_t x){
-    std::byte xBigEndian = std::byte(x);
+    std::byte xBigEndian = static_cast<std::byte>(x);
     file.write(&xBigEndian, 1);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, int8_t x){
-    std::byte xBigEndian = std::byte(x);
+    std::byte xBigEndian = static_cast<std::byte>(x);
     file.write(&xBigEndian, 1);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, uint16_t x){
     std::byte xBigEndian[2];
-    xBigEndian[1] = std::byte(x & 0xff);
-    xBigEndian[0] = std::byte(x >> 8 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 8 & 0xff);
     file.write(xBigEndian, 2);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, int16_t x){
     std::byte xBigEndian [2];
-    xBigEndian[1] = std::byte(x & 0xff);
-    xBigEndian[0] = std::byte(x >> 8 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 8 & 0xff);
     file.write(xBigEndian, 2);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, uint32_t x){
     std::byte xBigEndian [4];
-    xBigEndian[3] = std::byte(x & 0xff);
-    xBigEndian[2] = std::byte(x >> 8 & 0xff);
-    xBigEndian[1] = std::byte(x >> 16 & 0xff);
-    xBigEndian[0] = std::byte(x >> 24 & 0xff);
+    xBigEndian[3] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[2] = static_cast<std::byte>(x >> 8 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x >> 16 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 24 & 0xff);
     file.write(xBigEndian, 4);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, int32_t x){
     std::byte xBigEndian [4];
-    xBigEndian[3] = std::byte(x & 0xff);
-    xBigEndian[2] = std::byte(x >> 8 & 0xff);
-    xBigEndian[1] = std::byte(x >> 16 & 0xff);
-    xBigEndian[0] = std::byte(x >> 24 & 0xff);
+    xBigEndian[3] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[2] = static_cast<std::byte>(x >> 8 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x >> 16 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 24 & 0xff);
     file.write(xBigEndian, 4);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, uint64_t x){
     std::byte xBigEndian [8];
-    xBigEndian[7] = std::byte(x & 0xff);
-    xBigEndian[6] = std::byte(x >> 8 & 0xff);
-    xBigEndian[5] = std::byte(x >> 16 & 0xff);
-    xBigEndian[4] = std::byte(x >> 24 & 0xff);
-    xBigEndian[3] = std::byte(x >> 32 & 0xff);
-    xBigEndian[2] = std::byte(x >> 40 & 0xff);
-    xBigEndian[1] = std::byte(x >> 48 & 0xff);
-    xBigEndian[0] = std::byte(x >> 54 & 0xff);
+    xBigEndian[7] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[6] = static_cast<std::byte>(x >> 8 & 0xff);
+    xBigEndian[5] = static_cast<std::byte>(x >> 16 & 0xff);
+    xBigEndian[4] = static_cast<std::byte>(x >> 24 & 0xff);
+    xBigEndian[3] = static_cast<std::byte>(x >> 32 & 0xff);
+    xBigEndian[2] = static_cast<std::byte>(x >> 40 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x >> 48 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 54 & 0xff);
     file.write(xBigEndian, 8);
     return file;
 }
 OBinaryFile& operator<<(OBinaryFile& file, int64_t x){
     std::byte xBigEndian [8];
-    xBigEndian[7] = std::byte(x & 0xff);
-    xBigEndian[6] = std::byte(x >> 8 & 0xff);
-    xBigEndian[5] = std::byte(x >> 16 & 0xff);
-    xBigEndian[4] = std::byte(x >> 24 & 0xff);
-    xBigEndian[3] = std::byte(x >> 32 & 0xff);
-    xBigEndian[2] = std::byte(x >> 40 & 0xff);
-    xBigEndian[1] = std::byte(x >> 48 & 0xff);
-    xBigEndian[0] = std::byte(x >> 54 & 0xff);
+    xBigEndian[7] = static_cast<std::byte>(x & 0xff);
+    xBigEndian[6] = static_cast<std::byte>(x >> 8 & 0xff);
+    xBigEndian[5] = static_cast<std::byte>(x >> 16 & 0xff);
+    xBigEndian[4] = static_cast<std::byte>(x >> 24 & 0xff);
+    xBigEndian[3] = static_cast<std::byte>(x >> 32 & 0xff);
+    xBigEndian[2] = static_cast<std::byte>(x >> 40 & 0xff);
+    xBigEndian[1] = static_cast<std::byte>(x >> 48 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 54 & 0xff);
     file.write(xBigEndian, 8);
     return file;
 }
@@ -262,7 +261,6 @@ OBinaryFile& operator<<(OBinaryFile& file, float x){
 OBinaryFile& operator<<(OBinaryFile& file, double x){
     uint64_t raw;
     std::memcpy(&raw, &x, sizeof(uint64_t));
-    printf("Raw value before serial: %x\n", raw);
     file << raw;
     return file;
 }

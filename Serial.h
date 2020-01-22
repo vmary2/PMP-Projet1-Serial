@@ -158,7 +158,7 @@ namespace serial {
     std::size_t sz = x.size();
     for(std::size_t i = 0u ; i < sz ; i++){
         file >> item;
-        x.[i] = (item);
+        x[i] = (item);
     }
     return file;
   }
