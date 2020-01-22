@@ -431,7 +431,7 @@ TEST(SerializationDouble, DoubleEq0){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -533,21 +533,6 @@ TEST(SerializationString, StringWithWeirdChars){
   EXPECT_TRUE(strcmp(xBefore.c_str(),xAfter.c_str())==0);
 }
 
-TEST(Wallahcamarche, vector){
-	std::vector<bool> xBefore = {010001010};
-	{
-	serial::OBinaryFile serializer(FileName);
-	serializer << xBefore;
-	}
-	std::vector<uint8_t> xAfter;
-	serial::IBinaryFile deserializer(FileName);
-	deserializer >> xAfter;
-	for(auto b : xAfter){
-		printf("%d ", b);
-	}
-	EXPECT_EQ(xBefore, xAfter);
-
-}
 
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
