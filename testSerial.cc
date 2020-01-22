@@ -361,7 +361,7 @@ TEST(SerializationChar, CharUpperBorder){
   EXPECT_EQ(xBefore, xAfter);
 }
 
-TEST(SerializationChar, EveryChar){
+TEST(SerializationChar, EveryPrintableChar){
   for(size_t i = 0; i <= 127; i++){
     char xBefore = (char)(i);
     {
@@ -431,7 +431,7 @@ TEST(SerializationDouble, DoubleEq0){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -443,7 +443,7 @@ TEST(SerializationDouble, DoubleBetweenBorders){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -455,7 +455,7 @@ TEST(SerializationDouble, DoubleLowerBorder){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -467,7 +467,7 @@ TEST(SerializationDouble, DoubleUpperBorder){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
