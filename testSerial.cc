@@ -362,7 +362,7 @@ TEST(SerializationChar, CharUpperBorder){
 }
 
 TEST(SerializationChar, EveryChar){
-  for(size_t i = 0; i <= 127; i++){
+  for(size_t i = 0; i <= 255; i++){
     char xBefore = (char)(i);
     {
     serial::OBinaryFile serializer(FileName);
@@ -443,7 +443,7 @@ TEST(SerializationDouble, DoubleBetweenBorders){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -455,7 +455,7 @@ TEST(SerializationDouble, DoubleLowerBorder){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
@@ -467,10 +467,86 @@ TEST(SerializationDouble, DoubleUpperBorder){
   serial::OBinaryFile serializer(FileName);
   serializer << xBefore;
   }
-  float xAfter;
+  double xAfter;
   serial::IBinaryFile deserializer(FileName);
   deserializer >> xAfter;
   EXPECT_DOUBLE_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationBool, BoolTrue){
+  bool xBefore = true;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  bool xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_TRUE(xBefore && xAfter);
+}
+
+TEST(SerializationBool, BoolFalse){
+  bool xBefore = false;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  bool xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_TRUE(!xBefore && !xAfter);
+}
+
+TEST(SerializationString, StringNormal){
+  std::string xBefore = "Avant, mon voisin habitait en face du cimetière, maintenant il habite en face de chez lui.";
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  std::string xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_TRUE(strcmp(xBefore.c_str(),xAfter.c_str())==0);
+}
+
+TEST(SerializationString, StringWithAntislashThings){
+  std::string xBefore = "Alors! \n \t Vous le voulez oui ou non? \n Le trésor des sudistes!\0";
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  std::string xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_TRUE(strcmp(xBefore.c_str(),xAfter.c_str())==0);
+}
+
+TEST(SerializationString, StringWithWeirdChars){
+  std::string xBefore = "♫Ç«£!▄▬ıQ╝♦♫▄F0%Q¸o1♪▼=œtØ1ÿ»Ï";
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  std::string xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_TRUE(strcmp(xBefore.c_str(),xAfter.c_str())==0);
+}
+
+TEST(Wallahcamarche, vector){
+	std::vector<bool> xBefore = {010001010};
+	{
+	serial::OBinaryFile serializer(FileName);
+	serializer << xBefore;
+	}
+	std::vector<uint8_t> xAfter;
+	serial::IBinaryFile deserializer(FileName);
+	deserializer >> xAfter;
+	for(auto b : xAfter){
+		printf("%d ", b);
+	}
+	EXPECT_EQ(xBefore, xAfter);
+
 }
 
 int main(int argc, char* argv[]) {

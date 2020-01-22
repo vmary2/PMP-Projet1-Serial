@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
+#include <iostream>
 
 #include <array>
 #include <map>
@@ -108,21 +109,40 @@ namespace serial {
 
   template<typename T>
   OBinaryFile& operator<<(OBinaryFile& file, const std::vector<T>& x) {
+    uint64_t size = x.size();
+    file << size;
+    for(const auto &data : x){
+      	file << data;
+    }
     return file;
   }
 
   template<typename T, std::size_t N>
   OBinaryFile& operator<<(OBinaryFile& file, const std::array<T,N>& x) {
+	for(const auto &data : x){
+      	file << data;
+    }
     return file;
   }
 
   template<typename K, typename V>
   OBinaryFile& operator<<(OBinaryFile& file, const std::map<K,V>& x) {
+	uint64_t size = x.size();
+    file << size;
+    for(const auto [key, value] : x){
+		file << key;
+		file << value;
+	}
     return file;
   }
 
   template<typename T>
   OBinaryFile& operator<<(OBinaryFile& file, const std::set<T>& x) {
+	uint64_t size = x.size();
+    file << size;
+    for(const auto data : x){
+		file << data;
+	}
     return file;
   }
 
