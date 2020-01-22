@@ -131,7 +131,9 @@ IBinaryFile& operator>>(IBinaryFile& file, bool& x){
 }
 IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
     // Read the size of the string
-    uint64_t sz; file >> sz;
+    uint64_t sz; 
+    file >> sz;
+    printf("sz = %zu\n", sz);
     char tmp[sz];
     // Creation of the C string byte per byte including the final '\0'
     for(uint64_t i = 0 ; i < sz ; i++){
@@ -141,4 +143,146 @@ IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
     return file;
 }
 
-} // End of namespace serial
+/***********************************************************
+ *                    OBinaryFile
+ ***********************************************************/
+/***********************************************************
+ *                      RULE OF FIVE
+ ***********************************************************/
+
+OBinaryFile::OBinaryFile(const std::string& filename, OBinaryFile::Mode mode)
+    : m_file(mode == Truncate ? std::fopen(filename.c_str(), "wb") : std::fopen(filename.c_str(), "ab")){
+        if (m_file == nullptr){
+            throw std::runtime_error ("Error while opening the file");
+        }
+    }
+
+OBinaryFile::OBinaryFile(OBinaryFile&& other) noexcept
+    : m_file(std::exchange(other.m_file, m_file)){}
+
+OBinaryFile& OBinaryFile::operator=(OBinaryFile&& other) noexcept{
+    std::swap(other.m_file, m_file);
+    return *this;
+}
+
+OBinaryFile::~OBinaryFile(){
+    std::fclose(m_file);
+}
+
+/***********************************************************
+ *                     WRITE UTILITY
+ ***********************************************************/
+std::size_t OBinaryFile::write(const std::byte* data, std::size_t size){
+    return fwrite(data, sizeof(std::byte),size, m_file);
+}
+
+/***********************************************************
+ *                     WRITE OPERATORS
+ ***********************************************************/
+
+OBinaryFile& operator<<(OBinaryFile& file, uint8_t x){
+    std::byte xBigEndian = std::byte(x);
+    file.write(&xBigEndian, 1);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, int8_t x){
+    std::byte xBigEndian = std::byte(x);
+    file.write(&xBigEndian, 1);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, uint16_t x){
+    std::byte xBigEndian[2];
+    xBigEndian[1] = std::byte(x & 0xff);
+    xBigEndian[0] = std::byte(x >> 8 & 0xff);
+    file.write(xBigEndian, 2);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, int16_t x){
+    std::byte xBigEndian [2];
+    xBigEndian[1] = std::byte(x & 0xff);
+    xBigEndian[0] = std::byte(x >> 8 & 0xff);
+    file.write(xBigEndian, 2);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, uint32_t x){
+    std::byte xBigEndian [4];
+    xBigEndian[3] = std::byte(x & 0xff);
+    xBigEndian[2] = std::byte(x >> 8 & 0xff);
+    xBigEndian[1] = std::byte(x >> 16 & 0xff);
+    xBigEndian[0] = std::byte(x >> 24 & 0xff);
+    file.write(xBigEndian, 4);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, int32_t x){
+    std::byte xBigEndian [4];
+    xBigEndian[3] = std::byte(x & 0xff);
+    xBigEndian[2] = std::byte(x >> 8 & 0xff);
+    xBigEndian[1] = std::byte(x >> 16 & 0xff);
+    xBigEndian[0] = std::byte(x >> 24 & 0xff);
+    file.write(xBigEndian, 4);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, uint64_t x){
+    std::byte xBigEndian [8];
+    xBigEndian[7] = std::byte(x & 0xff);
+    xBigEndian[6] = std::byte(x >> 8 & 0xff);
+    xBigEndian[5] = std::byte(x >> 16 & 0xff);
+    xBigEndian[4] = std::byte(x >> 24 & 0xff);
+    xBigEndian[3] = std::byte(x >> 32 & 0xff);
+    xBigEndian[2] = std::byte(x >> 40 & 0xff);
+    xBigEndian[1] = std::byte(x >> 48 & 0xff);
+    xBigEndian[0] = std::byte(x >> 54 & 0xff);
+    file.write(xBigEndian, 8);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, int64_t x){
+    std::byte xBigEndian [8];
+    xBigEndian[7] = std::byte(x & 0xff);
+    xBigEndian[6] = std::byte(x >> 8 & 0xff);
+    xBigEndian[5] = std::byte(x >> 16 & 0xff);
+    xBigEndian[4] = std::byte(x >> 24 & 0xff);
+    xBigEndian[3] = std::byte(x >> 32 & 0xff);
+    xBigEndian[2] = std::byte(x >> 40 & 0xff);
+    xBigEndian[1] = std::byte(x >> 48 & 0xff);
+    xBigEndian[0] = std::byte(x >> 54 & 0xff);
+    file.write(xBigEndian, 8);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, char x){
+    std::byte xBigEndian = std::byte(x);
+    file.write(&xBigEndian, 1);
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, float x){
+    uint32_t raw;
+    std::memcpy(&raw, &x, sizeof(uint32_t));
+    file << raw;
+    return file;
+}
+OBinaryFile& operator<<(OBinaryFile& file, double x){
+    uint64_t raw;
+    std::memcpy(&raw, &x, sizeof(uint64_t));
+    printf("Raw value before serial: %x\n", raw);
+    file << raw;
+    return file;
+}
+
+OBinaryFile& operator<<(OBinaryFile& file, bool x){
+    std::byte t = std::byte(true);
+    std::byte f = std::byte(false);
+    file.write(x ? &t : &f, 1);
+    return file;
+}
+
+OBinaryFile& operator<<(OBinaryFile& file, const std::string& x){
+    uint64_t size = x.size() +1;
+    file << size;
+    for(std::size_t i = 0; i < size; i ++){
+        file << x[i]; 
+    }
+    char end = '\0';
+    file << end;
+    return file;
+}
+
+}       // End of namespace serial
