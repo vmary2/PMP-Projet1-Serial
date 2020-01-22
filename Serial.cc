@@ -112,6 +112,7 @@ IBinaryFile& operator>>(IBinaryFile& file, float& x){
     uint32_t raw; file >> raw;
     float rawd;
     std::memcpy(&rawd, &raw, sizeof(uint32_t));
+    x = rawd;
     return file;
 }
 IBinaryFile& operator>>(IBinaryFile& file, double& x){

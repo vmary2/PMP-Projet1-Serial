@@ -154,16 +154,37 @@ namespace serial {
 
   template<typename T, std::size_t N>
   IBinaryFile& operator>>(IBinaryFile& file, std::array<T, N>& x) {
+    T item;
+    std::size_t sz = x.size();
+    for(std::size_t i = 0u ; i < sz ; i++){
+        file >> item;
+        x.[i] = (item);
+    }
     return file;
   }
 
   template<typename K, typename V>
   IBinaryFile& operator>>(IBinaryFile& file, std::map<K, V>& x) {
+    // Number of items in the collection
+    uint64_t sz; file >> sz;
+    K key; V value;
+    for(uint64_t i = 0 ; i < sz ; i++){
+        file >> key;
+        file >> value;
+        x.insert({ key, value });
+    }
     return file;
   }
 
   template<typename T>
   IBinaryFile& operator>>(IBinaryFile& file, std::set<T>& x) {
+    // Number of items in the collection
+    uint64_t sz; file >> sz;
+    T item;
+    for(uint64_t i = 0 ; i < sz ; i++){
+        file >> item;
+        x.insert(item);
+    }
     return file;
   }
 
