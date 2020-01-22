@@ -337,6 +337,142 @@ TEST(SerializationInt64, int64UpperBorder){
   EXPECT_EQ(xBefore, xAfter);
 }
 
+TEST(SerializationChar, CharLowerBorder){
+  char xBefore = std::numeric_limits<char>::min();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  char xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationChar, CharUpperBorder){
+  char xBefore = std::numeric_limits<char>::max();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  char xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationChar, EveryChar){
+  for(size_t i = 0; i <= 127; i++){
+    char xBefore = (char)(i);
+    {
+    serial::OBinaryFile serializer(FileName);
+    serializer << xBefore;
+    }
+    char xAfter;
+    {
+    serial::IBinaryFile deserializer(FileName);
+    deserializer >> xAfter;
+    EXPECT_EQ(xBefore, xAfter);
+    }
+  }
+}
+
+TEST(SerializationFloat, FloatEq0){
+  float xBefore = 0.0;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_FLOAT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationFloat, FloatBetweenBorders){
+  float xBefore = 5814.5151;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_FLOAT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationFloat, FloatLowerBorder){
+  float xBefore = std::numeric_limits<float>::min();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_FLOAT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationFloat, FloatUpperBorder){
+  float xBefore = std::numeric_limits<float>::max();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_FLOAT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationDouble, DoubleEq0){
+  double xBefore = 0.0;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_DOUBLE_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationDouble, DoubleBetweenBorders){
+  double xBefore = 1548956.154862;
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_DOUBLE_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationDouble, DoubleLowerBorder){
+  double xBefore = std::numeric_limits<double>::min();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_DOUBLE_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationDouble, DoubleUpperBorder){
+  double xBefore = std::numeric_limits<double>::max();
+  {
+  serial::OBinaryFile serializer(FileName);
+  serializer << xBefore;
+  }
+  float xAfter;
+  serial::IBinaryFile deserializer(FileName);
+  deserializer >> xAfter;
+  EXPECT_DOUBLE_EQ(xBefore, xAfter);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -230,7 +230,7 @@ OBinaryFile& operator<<(OBinaryFile& file, uint64_t x){
     xBigEndian[3] = static_cast<std::byte>(x >> 32 & 0xff);
     xBigEndian[2] = static_cast<std::byte>(x >> 40 & 0xff);
     xBigEndian[1] = static_cast<std::byte>(x >> 48 & 0xff);
-    xBigEndian[0] = static_cast<std::byte>(x >> 54 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 56 & 0xff);
     file.write(xBigEndian, 8);
     return file;
 }
@@ -243,7 +243,7 @@ OBinaryFile& operator<<(OBinaryFile& file, int64_t x){
     xBigEndian[3] = static_cast<std::byte>(x >> 32 & 0xff);
     xBigEndian[2] = static_cast<std::byte>(x >> 40 & 0xff);
     xBigEndian[1] = static_cast<std::byte>(x >> 48 & 0xff);
-    xBigEndian[0] = static_cast<std::byte>(x >> 54 & 0xff);
+    xBigEndian[0] = static_cast<std::byte>(x >> 56 & 0xff);
     file.write(xBigEndian, 8);
     return file;
 }
