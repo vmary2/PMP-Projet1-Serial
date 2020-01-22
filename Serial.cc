@@ -1,10 +1,13 @@
 #include "Serial.h"
+#include <cstring>
+
+static_assert(sizeof(float) == sizeof(uint32_t) && sizeof(double) == sizeof(uint64_t));
 
 namespace serial {
 
-/***********************************************************
- *                      RULE OF FIVE
- ***********************************************************/
+/**********************************************************************************
+ *                                   RULE OF FIVE
+ **********************************************************************************/
 
 IBinaryFile::IBinaryFile(const std::string& filename)
     : m_file(std::fopen(filename.c_str(), "rb")){
@@ -27,9 +30,9 @@ IBinaryFile& IBinaryFile::operator=(IBinaryFile&& other) noexcept{
 }
 
 
-/***********************************************************
- *                            READ UTILITY
- ***********************************************************/
+/**********************************************************************************
+ *                                  READ UTILITY
+ **********************************************************************************/
 
 
 std::size_t IBinaryFile::read(std::byte* data, std::size_t size){
@@ -37,9 +40,9 @@ std::size_t IBinaryFile::read(std::byte* data, std::size_t size){
 }
 
 
-/***********************************************************
- *                            READ OPERATORS
- ***********************************************************/
+/**********************************************************************************
+ *                                 READ OPERATORS
+ **********************************************************************************/
 
 
 IBinaryFile& operator>>(IBinaryFile& file, int8_t& x){
@@ -107,13 +110,16 @@ IBinaryFile& operator>>(IBinaryFile& file, char& x){
 IBinaryFile& operator>>(IBinaryFile& file, float& x){
     // On récupère le binaire du float stockés dans un entier 32 bits
     uint32_t raw; file >> raw;
-    x = (float)raw;
+    float rawd;
+    std::memcpy(&rawd, &raw, sizeof(uint32_t));
     return file;
 }
 IBinaryFile& operator>>(IBinaryFile& file, double& x){
     // On récupère le binaire du float stockés dans un entier 64 bits
     uint64_t raw; file >> raw;
-    x = (double)raw;
+    double rawd;
+    std::memcpy(&rawd, &raw, sizeof(uint64_t));
+    x = rawd;
     return file;
 }
 IBinaryFile& operator>>(IBinaryFile& file, bool& x){
@@ -134,4 +140,4 @@ IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
     return file;
 }
 
-}       // End of namespace serial
+} // End of namespace serial
