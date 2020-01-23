@@ -1113,15 +1113,18 @@ TEST(ConstructorTests, IBinaryFileNotExist){
 }
 /*TEST(ConstructorTests, OBinaryFileIBinaryFileMoveAssignement){
 	uint8_t xBefore = 1;
-	{
 	serial::OBinaryFile serializer(FileName);
-	serial::OBinaryFile theRealSerializer = std::move(serializer);
-	theRealSerializer << xBefore;
+	{
+		serial::OBinaryFile theRealSerializer = std::move(serializer);
+		theRealSerializer << xBefore;
 	}
 	uint8_t xAfter;
 	serial::IBinaryFile deserializer(FileName);
-	serial::IBinaryFile theRealDeserializer = std::move(deserializer);
-	theRealDeserializer >> xAfter;
+	{
+		serial::IBinaryFile theRealDeserializer = std::move(deserializer);
+		theRealDeserializer >> xAfter;
+	}
+	printf("XBefore : %d XAfter: %d\n", xBefore, xAfter);
 	EXPECT_EQ(xBefore, xAfter);
 }*/
 
