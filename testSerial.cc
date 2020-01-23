@@ -7,6 +7,11 @@
 #include <vector>
 #include <gtest/gtest.h>
 
+/*********************************************
+ * Etudiants : Mary Victor / Bonneau Antoine *
+ *********************************************/
+
+
 const char* FileName = "FileTest.bin";
 TEST(SerializationUint8, uint8BetweenBorders){
   uint8_t xBefore = 47;
@@ -1022,7 +1027,7 @@ TEST(SerializationSet, SetOfInt32){
 }
 
 TEST(SerializationSet, SetOfUint64){
-	std::set<uint64_t> xBefore = {0, 500000000, 215619552561};
+	std::set<uint64_t> xBefore = {0, 500000000, 21561955};
 	{
 	serial::OBinaryFile serializer(FileName);
 	serializer << xBefore;
