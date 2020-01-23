@@ -133,11 +133,12 @@ IBinaryFile& operator>>(IBinaryFile& file, std::string& x){
     // Read the size of the string
     uint64_t sz; 
     file >> sz;
-    char tmp[sz];
+    char tmp[sz+1];
     // Creation of the C string byte per byte including the final '\0'
     for(uint64_t i = 0 ; i < sz ; i++){
         file >> tmp[i];
     }
+    tmp[sz] = '\0';
     x = tmp;
     return file;
 }
@@ -273,13 +274,11 @@ OBinaryFile& operator<<(OBinaryFile& file, bool x){
 }
 
 OBinaryFile& operator<<(OBinaryFile& file, const std::string& x){
-    uint64_t size = x.size() +1;
+    uint64_t size = x.size();
     file << size;
     for(std::size_t i = 0; i < size; i ++){
         file << x[i]; 
     }
-    char end = '\0';
-    file << end;
     return file;
 }
 
