@@ -550,6 +550,18 @@ TEST(SerializationString, StringEmptyChain){
   EXPECT_TRUE(strcmp(xBefore.c_str(),xAfter.c_str())==0);
 }
 
+TEST(SerializationVector, EmptyVector){
+	std::vector<uint8_t> xBefore;
+	{
+	serial::OBinaryFile serializer(FileName);
+	serializer << xBefore;
+	}
+	std::vector<uint8_t> xAfter;
+	serial::IBinaryFile deserializer(FileName);
+	deserializer >> xAfter;
+	EXPECT_EQ(xBefore, xAfter);
+}
+
 TEST(SerializationVector, VectorOfUint8){
 	std::vector<uint8_t> xBefore = {0, 125, 255};
 	{
@@ -705,6 +717,18 @@ TEST(SerializationVector, VectorOfString){
 	deserializer >> xAfter;
 	EXPECT_EQ(xBefore, xAfter);
 }								
+
+TEST(SerializationArray, EmptyArray){
+	std::array<uint8_t, 0> xBefore;
+	{
+	serial::OBinaryFile serializer(FileName);
+	serializer << xBefore;
+	}
+	std::array<uint8_t, 0> xAfter;
+	serial::IBinaryFile deserializer(FileName);
+	deserializer >> xAfter;
+	EXPECT_EQ(xBefore, xAfter);
+}
 
 TEST(SerializationArray, ArrayOfUint8){
 	std::array<uint8_t, 3> xBefore = {0, 125, 255};
@@ -862,6 +886,18 @@ TEST(SerializationArray, ArrayOfString){
 	EXPECT_EQ(xBefore, xAfter);
 }
 
+TEST(SerializationMap, EmptyMap){
+	std::map<uint8_t, uint8_t> xBefore;
+	{
+	serial::OBinaryFile serializer(FileName);
+	serializer << xBefore;
+	}
+	std::map<uint8_t, uint8_t> xAfter;
+	serial::IBinaryFile deserializer(FileName);
+	deserializer >> xAfter;
+	EXPECT_EQ(xBefore, xAfter);
+}
+
 TEST(SerializationMap, MapOfUint8){
 	std::map<uint8_t, uint8_t> xBefore = { {0,8}, {10,125}, {20,255}};
 	{
@@ -896,6 +932,18 @@ TEST(SerializationMap, MapKeyStringValueBool){
 	serializer << xBefore;
 	}
 	std::map<std::string, bool> xAfter;
+	serial::IBinaryFile deserializer(FileName);
+	deserializer >> xAfter;
+	EXPECT_EQ(xBefore, xAfter);
+}
+
+TEST(SerializationSet, EmptySet){
+	std::set<uint8_t> xBefore;
+	{
+	serial::OBinaryFile serializer(FileName);
+	serializer << xBefore;
+	}
+	std::set<uint8_t> xAfter;
 	serial::IBinaryFile deserializer(FileName);
 	deserializer >> xAfter;
 	EXPECT_EQ(xBefore, xAfter);
