@@ -1116,36 +1116,21 @@ TEST(ConstructorTests, OBinaryFileNotExist){
 TEST(ConstructorTests, IBinaryFileNotExist){
 	EXPECT_THROW(serial::IBinaryFile serializer("/jexistepo/moinonplus"), std::runtime_error);
 }
-/*TEST(ConstructorTests, OBinaryFileIBinaryFileMoveAssignement){
+TEST(ConstructorTests, OBinaryFileIBinaryFileMoveAssignement){
 	uint8_t xBefore = 1;
-	serial::OBinaryFile serializer(FileName);
 	{
+		serial::OBinaryFile serializer(FileName);
 		serial::OBinaryFile theRealSerializer = std::move(serializer);
 		theRealSerializer << xBefore;
 	}
 	uint8_t xAfter;
-	serial::IBinaryFile deserializer(FileName);
 	{
+		serial::IBinaryFile deserializer(FileName);
 		serial::IBinaryFile theRealDeserializer = std::move(deserializer);
 		theRealDeserializer >> xAfter;
 	}
-	printf("XBefore : %d XAfter: %d\n", xBefore, xAfter);
 	EXPECT_EQ(xBefore, xAfter);
-}*/
-
-/*TEST(ConstructorTests, OBinaryFileIBinaryFileMoveAssignement){
-	uint8_t xBefore = 1;
-	{
-	serial::OBinaryFile serializer(FileName);
-	serial::OBinaryFile theRealSerializer = serializer;
-	theRealSerializer << xBefore;
-	}
-	uint8_t xAfter;
-	serial::IBinaryFile deserializer(FileName);
-	serial::IBinaryFile theRealDeserializer(deserializer);
-	deserializer >> xAfter;
-	EXPECT_EQ(xBefore, xAfter);
-}*/
+}
 
 TEST(ConstructorTests, OBinaryFileConcat){
 	char xBefore = 'a';

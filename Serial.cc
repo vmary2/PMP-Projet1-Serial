@@ -21,7 +21,9 @@ IBinaryFile::IBinaryFile(IBinaryFile&& other) noexcept
     : m_file(std::exchange(other.m_file, nullptr)){}
 
 IBinaryFile::~IBinaryFile(){
-    std::fclose(m_file);
+    if(nullptr != m_file){
+        std::fclose(m_file);
+    }
 }
 
 IBinaryFile& IBinaryFile::operator=(IBinaryFile&& other) noexcept{
@@ -158,7 +160,7 @@ OBinaryFile::OBinaryFile(const std::string& filename, OBinaryFile::Mode mode)
     }
 
 OBinaryFile::OBinaryFile(OBinaryFile&& other) noexcept
-    : m_file(std::exchange(other.m_file, m_file)){}
+    : m_file(std::exchange(other.m_file, nullptr)){}
 
 OBinaryFile& OBinaryFile::operator=(OBinaryFile&& other) noexcept{
     std::swap(other.m_file, m_file);
@@ -166,7 +168,9 @@ OBinaryFile& OBinaryFile::operator=(OBinaryFile&& other) noexcept{
 }
 
 OBinaryFile::~OBinaryFile(){
-    std::fclose(m_file);
+    if(nullptr != m_file){
+        std::fclose(m_file);
+    }
 }
 
 /***********************************************************
