@@ -110,6 +110,7 @@ namespace serial {
   template<typename T>
   OBinaryFile& operator<<(OBinaryFile& file, const std::vector<T>& x) {
     uint64_t size = x.size();
+    printf("Size : %zu\n", size);
     file << size;
     for(const auto &data : x){
       	file << data;
@@ -164,8 +165,8 @@ namespace serial {
   IBinaryFile& operator>>(IBinaryFile& file, std::vector<T>& x) {
     // Number of items in the collection
     uint64_t sz; file >> sz;
-    T item;
     for(uint64_t i = 0 ; i < sz ; i++){
+        T item;
         file >> item;
         x.push_back(item);
     }
@@ -174,9 +175,9 @@ namespace serial {
 
   template<typename T, std::size_t N>
   IBinaryFile& operator>>(IBinaryFile& file, std::array<T, N>& x) {
-    T item;
     std::size_t sz = x.size();
     for(std::size_t i = 0u ; i < sz ; i++){
+        T item;
         file >> item;
         x[i] = (item);
     }
@@ -187,8 +188,8 @@ namespace serial {
   IBinaryFile& operator>>(IBinaryFile& file, std::map<K, V>& x) {
     // Number of items in the collection
     uint64_t sz; file >> sz;
-    K key; V value;
     for(uint64_t i = 0 ; i < sz ; i++){
+        K key; V value;
         file >> key;
         file >> value;
         x.insert({ key, value });
@@ -200,8 +201,8 @@ namespace serial {
   IBinaryFile& operator>>(IBinaryFile& file, std::set<T>& x) {
     // Number of items in the collection
     uint64_t sz; file >> sz;
-    T item;
     for(uint64_t i = 0 ; i < sz ; i++){
+        T item;
         file >> item;
         x.insert(item);
     }

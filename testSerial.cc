@@ -1169,6 +1169,83 @@ TEST(ConstructorTests, OBinaryFileTruncate){
 	EXPECT_EQ('b', xAfter);
 }
 
+TEST(SerializationArray, ArrayOfArrayOfBool) {
+    std::array<bool,5> a = {true,true,true,true,false};
+    std::array<bool,5> b = {false,true,false,true,false};
+
+    std::array<std::array<bool,5>,2> x = {a,b};
+    std::array<std::array<bool,5>,2> y;
+    {
+        serial::OBinaryFile OBF("test");
+        OBF << x;
+    }
+
+    {
+        serial::IBinaryFile IBF("test");
+        IBF >> y;
+    }
+
+    EXPECT_EQ(x, y);
+}
+
+TEST(SerializationSet, SetOfSetOfBool) {
+    std::set<bool> a = {true,false};
+    std::set<bool> b = {false,true};
+
+    std::set<std::set<bool>> x = {a,b};
+    std::set<std::set<bool>> y;
+    {
+        serial::OBinaryFile OBF("test");
+        OBF << x;
+    }
+
+    {
+        serial::IBinaryFile IBF("test");
+        IBF >> y;
+    }
+
+    EXPECT_EQ(x, y);
+}
+
+TEST(SerializationMap, MapOfMapOfCharBoolUint8) {
+    std::map<char,bool> a = {{'a',true},{'b',false}};
+    std::map<char,bool> b = {{'g',false},{'h',true},{'z',true}};
+
+    std::map<std::map<char,bool>,uint8_t> x = {{a, 5},{b, 10}};
+    std::map<std::map<char,bool>,uint8_t> y;
+    {
+        serial::OBinaryFile OBF("test");
+        OBF << x;
+    }
+
+    {
+        serial::IBinaryFile IBF("test");
+        IBF >> y;
+    }
+
+    EXPECT_EQ(x, y);
+}
+
+TEST(SerializationVector, VectorOfVectorOfBool) {
+    std::vector<bool> a = {true,true,true,true,false};
+    std::vector<bool> b = {false,true,false,true,false};
+	std::vector<bool> c = {true,false,false,false,true};
+
+    std::vector<std::vector<bool>> x = {a,b,c};
+    std::vector<std::vector<bool>> y;
+    {
+        serial::OBinaryFile OBF("test");
+        OBF << x;
+    }
+
+    {
+        serial::IBinaryFile IBF("test");
+        IBF >> y;
+    }
+
+    EXPECT_EQ(x, y);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
