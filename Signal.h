@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 
 namespace sig {
 
@@ -66,21 +67,29 @@ namespace sig {
   
     // result of combiner
     using result_type = R;
-
+    std::unordered_map<std::size_t,std::function<R(Args...)>> funcs;
+    Combiner c;
     // constructor
     Signal(Combiner combiner = Combiner()) {
-
+        c = combiner;
     }
 
 
     // connect the function to the signal and returns an id
     template<typename Func>
     std::size_t connectSlot(Func callback) {
-      return 0u;
+        std::function<R(Args...)> newfunc = callback;
+        std::size_t id = funcs.size();
+        while(funcs.find(id) == funcs.end()){
+            id++;
+        }
+        funcs.insert(id, callback);
+        return id;
     }
 
     // disconnect the function represented by the id
     void disconnectSlot(std::size_t id) {
+        funcs.erase(id);
     }
 
     // emit a signal, call all the slots
@@ -91,5 +100,4 @@ namespace sig {
   
 
 }
-
 #endif // SIGNAL_H
