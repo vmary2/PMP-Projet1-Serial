@@ -12,7 +12,7 @@ namespace sig {
    */
   class DiscardCombiner {
   public:
-    using result_type = /* implementation defined */;
+    using result_type = void;
 
     template<typename U>
     void combine(const U&) {
@@ -28,7 +28,7 @@ namespace sig {
   template<typename T>
   class LastCombiner {
   public:
-    using result_type = /* implementation defined */;
+    using result_type = T;
 
     template<typename U>
     void combine(const U& item) {
@@ -44,7 +44,7 @@ namespace sig {
   template<typename T>
   class VectorCombiner {
   public:
-    using result_type = /* implementation defined */;
+    using result_type = std::vector<T>;
 
     template<typename U>
     void combine(const U& item) {
@@ -57,20 +57,26 @@ namespace sig {
   /*
    * A signal
    */
-  template<typename Signature, typename Combiner = DiscardCombiner>
-  class Signal {
+  template< class,class > 
+  class Signal; /* undefined */
+
+  template<typename R, typename Combiner, typename ...Args>
+  class Signal<R(Args...), Combiner> {
   public:
+  
     // result of combiner
-    using result_type = /* implementation defined */;
+    using result_type = R;
 
     // constructor
     Signal(Combiner combiner = Combiner()) {
 
     }
 
+
     // connect the function to the signal and returns an id
     template<typename Func>
     std::size_t connectSlot(Func callback) {
+      return 0u;
     }
 
     // disconnect the function represented by the id
@@ -78,9 +84,11 @@ namespace sig {
     }
 
     // emit a signal, call all the slots
-    result_type emitSignal(/* arguments of the signature */ args) {
+    result_type emitSignal(Args... args) {
     }
   };
+
+  
 
 }
 
