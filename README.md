@@ -1,1 +1,4 @@
-# PMP-Projet1-Serial
+# TP2 de Programmation multi-paradigm
+
+- Bonneau Antoine
+- Mary Victor
