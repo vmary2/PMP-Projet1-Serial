@@ -17,6 +17,7 @@ namespace sig {
 
     template<typename U>
     void combine(const U&) {
+      return;
     }
 
     result_type result() {
@@ -75,10 +76,15 @@ namespace sig {
   
     // result of combiner
     using result_type = R;
+
+    // callbacks
     std::unordered_map<std::size_t,std::function<R(Args...)>> funcs;
+   
+    // Combiner : default = DiscardCombiner
+   
     Combiner c;
     // constructor
-    Signal(Combiner combiner = Combiner()) {
+    Signal(Combiner combiner = Combiner()) : funcs() {
         c = combiner;
     }
 
@@ -91,7 +97,7 @@ namespace sig {
         while(funcs.find(id) == funcs.end()){
             id++;
         }
-        funcs.insert(id, callback);
+        funcs.insert({id, callback});
         return id;
     }
 
@@ -103,7 +109,7 @@ namespace sig {
     // emit a signal, call all the slots
     result_type emitSignal(Args... args) {
       for(auto &fun : funcs){
-        c.combine(fun(args));
+        c.combine(fun.second(args...));
       }
       return c.result();
     }
