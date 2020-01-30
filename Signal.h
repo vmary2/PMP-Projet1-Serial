@@ -30,11 +30,15 @@ namespace sig {
   public:
     using result_type = T;
 
+    result_type res;
+
     template<typename U>
     void combine(const U& item) {
+      res = static_cast<result_type>(item);
     }
 
     result_type result() {
+      return res;
     }
   };
 
@@ -46,19 +50,23 @@ namespace sig {
   public:
     using result_type = std::vector<T>;
 
+    result_type res;
+
     template<typename U>
     void combine(const U& item) {
+      res.push_back(static_cast<result_type>(item));
     }
 
     result_type result() {
+      return res;
     }
   };
 
   /*
    * A signal
    */
-  template< class,class > 
-  class Signal; /* undefined */
+  template< class,class U = DiscardCombiner> 
+  class Signal;
 
   template<typename R, typename Combiner, typename ...Args>
   class Signal<R(Args...), Combiner> {
@@ -67,9 +75,12 @@ namespace sig {
     // result of combiner
     using result_type = R;
 
-    // constructor
-    Signal(Combiner combiner = Combiner()) {
+    //  Combiner
+    Combiner c;
 
+    // constructor
+    Signal(Combiner combiner = Combiner()) : funcs() {
+      c = combiner;
     }
 
 
@@ -85,10 +96,13 @@ namespace sig {
 
     // emit a signal, call all the slots
     result_type emitSignal(Args... args) {
+      for(auto &fun : funcs){
+        c.combine(fun(args));
+      }
+      return c.result();
     }
   };
 
-  
 
 }
 
