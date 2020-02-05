@@ -38,7 +38,7 @@ namespace sig {
 
     template<typename U>
     void combine(const U& item) {
-      res = static_cast<result_type>(item);
+      res = item;
     }
 
     result_type result() {
@@ -89,7 +89,7 @@ namespace sig {
     Combiner c;
     // constructor
     Signal(Combiner combiner = Combiner()) : funcs() {
-        c = combiner;
+        c = std::move(combiner);
     }
 
 
@@ -131,7 +131,7 @@ namespace sig {
     Combiner c;
     // constructor
     Signal(Combiner combiner = Combiner()) : funcs() {
-        c = combiner;
+        c = std::move(combiner);
     }
 
 

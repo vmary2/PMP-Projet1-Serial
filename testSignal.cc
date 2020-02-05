@@ -22,14 +22,6 @@ namespace sigtest
     NonMovable& operator = (NonMovable&&) = delete;
   };
 
-  struct NonMovableAndCopyable{
-    NonMovableAndCopyable() = default;
-    NonMovableAndCopyable(const NonMovableAndCopyable&) = delete;
-    NonMovableAndCopyable& operator = (const NonMovableAndCopyable&) = delete;
-    NonMovableAndCopyable(NonMovableAndCopyable&&) = delete;
-    NonMovableAndCopyable& operator = (NonMovableAndCopyable&&) = delete;
-  };
-
 } // namespace sigtest
 
 
@@ -169,16 +161,42 @@ TEST(TestNonMovable, DiscardCombiner){
     sig::Signal<sigtest::NonMovable(void)> sig;
     sig.connectSlot(callback6);
     sig.emitSignal();
-    EXPECT_NO_THROW(sig.c.result());
+    sig.c.result();
 }
 
-/*TEST(TestNonMovable, LastCombiner){
-    sig::Signal<sigtest::NonMovable(sigtest::NonMovable),sig::LastCombiner<sigtest::NonMovable>> sig;
-    sigtest::NonMovable noMove;
-    sig.connectSlot([&noMove](sigtest::NonMovable x){noMove = x;});
-    sigtest::NonMovable tmp;
-    sig.emitSignal(tmp);
-    EXPECT_EQ(noMove, tmp);
+TEST(TestNonMovable, LastCombiner){
+    sig::Signal<sigtest::NonMovable(),sig::LastCombiner<sigtest::NonMovable>> sig;
+    sig.connectSlot([]()->sigtest::NonMovable {return sigtest::NonMovable();});
+    sig.emitSignal();
+    sig.c.result();
+}
+
+TEST(TestNonMovable, VectorCombiner){
+    sig::Signal<sigtest::NonMovable(),sig::VectorCombiner<sigtest::NonMovable>> sig;
+    sig.connectSlot([]()->sigtest::NonMovable {return sigtest::NonMovable();});
+    sig.emitSignal();
+    sig.c.result();
+}
+
+TEST(TestNonCopy, DiscardCombiner){
+    sig::Signal<sigtest::NonCopyable()> sig;
+    sig.connectSlot([]()->sigtest::NonCopyable {return sigtest::NonCopyable();});
+    sig.emitSignal();
+    sig.c.result();
+}
+
+/*TEST(TestNonCopy, LastCombiner){
+    sig::Signal<sigtest::NonCopyable(),sig::LastCombiner<sigtest::NonCopyable>> sig;
+    sig.connectSlot([]()->sigtest::NonCopyable {return sigtest::NonCopyable();});
+    sig.emitSignal();
+    sig.c.result();
+}
+
+TEST(TestNonCopy, VectorCombiner){
+    sig::Signal<sigtest::NonCopyable(),sig::VectorCombiner<sigtest::NonCopyable>> sig;
+    sig.connectSlot([]()->sigtest::NonCopyable {return sigtest::NonCopyable();});
+    sig.emitSignal();
+    sig.c.result();
 }*/
 
 int main(int argc, char* argv[]) {
