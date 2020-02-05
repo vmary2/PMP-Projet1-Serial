@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
-#include <unordered_map>
+#include <map>
 
 namespace sig {
 
@@ -18,10 +18,11 @@ namespace sig {
 
     template<typename U>
     void combine(const U&) {
-      return;
+        return;
     }
 
     result_type result() {
+        return;
     }
   };
 
@@ -57,7 +58,7 @@ namespace sig {
 
     template<typename U>
     void combine(const U& item) {
-      res.push_back(static_cast<result_type>(item));
+      res.push_back(item);
     }
 
     result_type result() {
@@ -81,7 +82,7 @@ namespace sig {
     using result_type = typename Combiner::result_type;
 
     // callbacks
-    std::unordered_map<std::size_t,std::function<R(Args...)>> funcs;
+    std::map<std::size_t,std::function<R(Args...)>> funcs;
    
     // Combiner : default = DiscardCombiner
    
@@ -123,7 +124,7 @@ namespace sig {
   public:
   
     // callbacks
-    std::unordered_map<std::size_t,std::function<void(Args...)>> funcs;
+    std::map<std::size_t,std::function<void(Args...)>> funcs;
    
     // Combiner : default = DiscardCombiner
    
