@@ -4,6 +4,35 @@
 
 #include <gtest/gtest.h>
 
+namespace sigtest
+{
+  struct NonCopyable{
+    NonCopyable() = default;
+    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable& operator = (const NonCopyable&) = delete;
+    NonCopyable(NonCopyable&&) = default;
+    NonCopyable& operator = (NonCopyable&&) = default;
+  };
+
+  struct NonMovable{
+    NonMovable() = default;
+    NonMovable(const NonMovable&) = default;
+    NonMovable& operator = (const NonMovable&) = default;
+    NonMovable(NonMovable&&) = delete;
+    NonMovable& operator = (NonMovable&&) = delete;
+  };
+
+  struct NonMovableAndCopyable{
+    NonMovableAndCopyable() = default;
+    NonMovableAndCopyable(const NonMovableAndCopyable&) = delete;
+    NonMovableAndCopyable& operator = (const NonMovableAndCopyable&) = delete;
+    NonMovableAndCopyable(NonMovableAndCopyable&&) = delete;
+    NonMovableAndCopyable& operator = (NonMovableAndCopyable&&) = delete;
+  };
+
+} // namespace sigtest
+
+
 void callback ( int param ) {
  std::cout << "Here is your Integer : " << param << std::endl;
 }
