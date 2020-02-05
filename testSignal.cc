@@ -34,7 +34,7 @@ namespace sigtest
 
 
 void callback ( int param ) {
- std::cout << "Here is your Integer : " << param << std::endl;
+    std::cout << "Here is your Integer : " << param << std::endl;
 }
 
 int callback2 (int x){
@@ -161,6 +161,25 @@ TEST(TestReturnVector, BasicTestVectorCombiner){
     EXPECT_EQ(sig.c.result()[1][2], 2);
 
 }
+
+sigtest::NonMovable callback6(){
+    return sigtest::NonMovable();
+}
+TEST(TestNonMovable, DiscardCombiner){
+    sig::Signal<sigtest::NonMovable(void)> sig;
+    sig.connectSlot(callback6);
+    sig.emitSignal();
+    EXPECT_NO_THROW(sig.c.result());
+}
+
+/*TEST(TestNonMovable, LastCombiner){
+    sig::Signal<sigtest::NonMovable(sigtest::NonMovable),sig::LastCombiner<sigtest::NonMovable>> sig;
+    sigtest::NonMovable noMove;
+    sig.connectSlot([&noMove](sigtest::NonMovable x){noMove = x;});
+    sigtest::NonMovable tmp;
+    sig.emitSignal(tmp);
+    EXPECT_EQ(noMove, tmp);
+}*/
 
 int main(int argc, char* argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
