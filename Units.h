@@ -22,16 +22,16 @@ namespace phy {
   };
 
 
-namespace details {
+ namespace details {
 
-  template<class U1, class U2>
-  using Unit_multiply = Unit<U1::metre + U2::metre, U1::kilogram + U2::kilogram, U1::second + U2::second, U1::ampere + U2::ampere, U1::kelvin + U2::kelvin, U1::mole + U2::mole, U1::candela + U2::candela>;
+    template<class U1, class U2>
+    using Unit_multiply = Unit<U1::metre + U2::metre, U1::kilogram + U2::kilogram, U1::second + U2::second, U1::ampere + U2::ampere, U1::kelvin + U2::kelvin, U1::mole + U2::mole, U1::candela + U2::candela>;
 
 
-  template<class U1, class U2>
-  using Unit_divide = Unit<U1::metre - U2::metre, U1::kilogram - U2::kilogram, U1::second - U2::second, U1::ampere - U2::ampere, U1::kelvin - U2::kelvin, U1::mole - U2::mole, U1::candela - U2::candela>;
+    template<class U1, class U2>
+    using Unit_divide = Unit<U1::metre - U2::metre, U1::kilogram - U2::kilogram, U1::second - U2::second, U1::ampere - U2::ampere, U1::kelvin - U2::kelvin, U1::mole - U2::mole, U1::candela - U2::candela>;
 
-}
+  }
 
   /*
    * Various type aliases
@@ -172,7 +172,12 @@ namespace details {
    * Cast function between two quantities
    */
   template<typename ResQty, typename U, typename R>
-  ResQty qtyCast(Qty<U,R>);
+  ResQty qtyCast(Qty<U,R> q){
+    static_assert(std::is_same<ResQty::Unit, U>::value); // L'arrivée n'a pas la même unité que le départ
+    ResQty ret = ResQty();
+    ret += q;
+    return ret;
+  }
 
   namespace literals {
 
@@ -181,7 +186,6 @@ namespace details {
      */
 
     Length operator "" _metres(unsigned long long int val){
-
     }
     Mass operator "" _kilograms(unsigned long long int val);
     Time operator "" _seconds(unsigned long long int val);
