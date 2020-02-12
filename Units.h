@@ -4,9 +4,6 @@
 #include <cstdint>
 #include <ratio>
 
-namespace details {
-
-}
 
 namespace phy {
 
@@ -31,6 +28,10 @@ namespace phy {
   template<class U1, class U2>
   using Unit_divide = Unit<U1::metre - U2::metre, U1::kilogram - U2::kilogram, U1::second - U2::second, U1::ampere - U2::ampere, U1::kelvin - U2::kelvin, U1::mole - U2::mole, U1::candela - U2::candela>;
 
+
+
+namespace details {
+
   /*
    * Various type aliases
    */
@@ -43,6 +44,7 @@ namespace phy {
   using Mole      = Unit<0,0,0,0,0,1,0>;
   using Candela   = Unit<0,0,0,0,0,0,1>;
   using Radian    = Unit<0,0,0,0,0,0,0>; // metre \ metre
+}
 
   /*
    * A quantity is a value associated with a unit and a ratio
@@ -70,6 +72,8 @@ namespace phy {
 
   };
 
+
+namespace details {
   /*
    * Various quantities
    */
@@ -91,6 +95,7 @@ namespace phy {
   using Foot = Qty<Metre, std::ratio<1000000, 3280840>>;
   using Inch = Qty<Metre, std::ratio<1000000, 39370079>>;
 
+}
   /*
    * Comparison operators
    */
@@ -176,13 +181,13 @@ namespace phy {
      * Some user-defined literals
      */
 
-    Length operator "" _metres(unsigned long long int val);
-    Mass operator "" _kilograms(unsigned long long int val);
-    Time operator "" _seconds(unsigned long long int val);
-    Current operator "" _amperes(unsigned long long int val);
-    Temperature operator "" _kelvins(unsigned long long int val);
-    Amount operator "" _moles(unsigned long long int val);
-    LuminousIntensity operator "" _candelas(unsigned long long int val);
+    details::Length operator "" _metres(unsigned long long int val);
+    details::Mass operator "" _kilograms(unsigned long long int val);
+    details::Time operator "" _seconds(unsigned long long int val);
+    details::Current operator "" _amperes(unsigned long long int val);
+    details::Temperature operator "" _kelvins(unsigned long long int val);
+    details::Amount operator "" _moles(unsigned long long int val);
+    details::LuminousIntensity operator "" _candelas(unsigned long long int val);
 
   }
 
