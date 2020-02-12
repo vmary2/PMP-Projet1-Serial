@@ -192,13 +192,33 @@ namespace phy {
      */
 
     Length operator "" _metres(unsigned long long int val){
+      Qty<Metre> ret(val);
+      return ret; 
     }
-    Mass operator "" _kilograms(unsigned long long int val);
-    Time operator "" _seconds(unsigned long long int val);
-    Current operator "" _amperes(unsigned long long int val);
-    Temperature operator "" _kelvins(unsigned long long int val);
-    Amount operator "" _moles(unsigned long long int val);
-    LuminousIntensity operator "" _candelas(unsigned long long int val);
+    Mass operator "" _kilograms(unsigned long long int val){
+      Qty<Kilogram> ret(val);
+      return ret; 
+    }
+    Time operator "" _seconds(unsigned long long int val){
+      Qty<Second> ret(val);
+      return ret; 
+    }
+    Current operator "" _amperes(unsigned long long int val){
+      Qty<Ampere> ret(val);
+      return ret; 
+    }
+    Temperature operator "" _kelvins(unsigned long long int val){
+      Qty<Kelvin> ret(val);
+      return ret; 
+    }
+    Amount operator "" _moles(unsigned long long int val){
+      Qty<Mole> ret(val);
+      return ret; 
+    }
+    LuminousIntensity operator "" _candelas(unsigned long long int val){
+      Qty<Candela> ret(val);
+      return ret; 
+    }
 
   }
 
