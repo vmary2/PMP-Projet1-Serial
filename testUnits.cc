@@ -21,6 +21,13 @@ TEST(TestUnits, OperationTests){
     EXPECT_EQ(ResAdd.value, 23);
 }
 
+
+TEST(TestUnits, CastTest){
+    phy::Qty<phy::Metre ,std::milli> mm(32);
+    auto nm = phy::qtyCast<phy::Qty<phy::Metre, std::nano>>(mm);
+    printf("value : %ld\n", nm.value);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
