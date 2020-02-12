@@ -149,7 +149,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   Qty<U, std::ratio_subtract<R1, R2>> operator-(Qty<U, R1> q1, Qty<U, R2> q2){
-    using Ratio = std::ratio_add<R1, R2>;
+    using Ratio = std::ratio_subtract<R1, R2>;
     Qty<U, Ratio> ret;
     ret.value = (q1.value * R1::num / R1::den - q2.value * R2::num / R2::den) * Ratio::den / Ratio::num;
     return ret;

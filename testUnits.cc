@@ -18,7 +18,9 @@ TEST(TestUnits, OperationTests){
     phy::Qty<phy::Metre, std::ratio<1,6>> lhs(3);
     phy::Qty<phy::Metre, std::ratio<2,3>> rhs(5);
     auto ResAdd = lhs + rhs;
+    lhs += rhs;
     EXPECT_EQ(ResAdd.value, 23);
+    EXPECT_EQ(lhs.value, 23);
 }
 
 
