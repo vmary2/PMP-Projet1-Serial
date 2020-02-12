@@ -57,7 +57,13 @@ namespace details {
 
     intmax_t value;
 
-    Qty(intmax_t v);
+    Qty(){
+      Qty(0);
+    }
+
+    Qty(intmax_t v){
+      value = v;
+    }
 
     template<typename ROther>
     Qty& operator+=(Qty<U, ROther> other){
@@ -152,7 +158,7 @@ namespace details {
   template<typename U1, typename R1, typename U2, typename R2>
   Qty<details::Unit_multiply<U1, U2>, std::ratio_multiply<R1, R2>> operator*(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using Ratio = std::ratio_multiply<R1, R2>;
-    using Unit = Unit_multiply<U1, U2>;
+    using Unit = details::Unit_multiply<U1, U2>;
     Qty<Unit, Ratio> ret;
     ret.value = (q1.value * R1::num / R1::den * q2.value * R2::num / R2::den) * Ratio::den / Ratio::num;
     return ret;
@@ -161,7 +167,7 @@ namespace details {
   template<typename U1, typename R1, typename U2, typename R2>
   Qty<details::Unit_divide<U1, U2>, std::ratio_divide<R1, R2>> operator/(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using Ratio = std::ratio_divide<R1, R2>;
-    using Unit = Unit_divide<U1, U2>;
+    using Unit = details::Unit_divide<U1, U2>;
     Qty<Unit, Ratio> ret;
     ret.value = ( (q1.value * R1::num / R1::den) / (q2.value * R2::num / R2::den) ) * Ratio::den / Ratio::num;
     return ret;
@@ -180,9 +186,7 @@ namespace details {
      * Some user-defined literals
      */
 
-    Length operator "" _metres(unsigned long long int val){
-
-    }
+    Length operator "" _metres(unsigned long long int val);
     Mass operator "" _kilograms(unsigned long long int val);
     Time operator "" _seconds(unsigned long long int val);
     Current operator "" _amperes(unsigned long long int val);
