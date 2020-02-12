@@ -58,7 +58,7 @@ namespace phy {
     intmax_t value;
 
     Qty(){
-      Qty(0);
+      value = 0;
     }
 
     Qty(intmax_t v){
@@ -68,13 +68,13 @@ namespace phy {
     template<typename ROther>
     Qty& operator+=(Qty<U, ROther> other){
       this->value = (this->value * R::num / R::den + other.value * ROther::num / ROther::den) * R::den / R::num;
-      return this;
+      return *this;
     }
 
     template<typename ROther>
     Qty& operator-=(Qty<U, ROther> other){
       this->value = (this->value * R::num / R::den - other.value * ROther::num / ROther::den) * R::den / R::num;
-      return this;
+      return *this;
     }
 
   };
@@ -180,7 +180,7 @@ namespace phy {
   template<typename ResQty, typename U, typename R>
   ResQty qtyCast(Qty<U,R> q){
     static_assert(std::is_same<typename ResQty::Unit, U>::value); // L'arrivée n'a pas la même unité que le départ
-    ResQty ret = ResQty();
+    ResQty ret;
     ret += q;
     return ret;
   }
@@ -191,8 +191,7 @@ namespace phy {
      * Some user-defined literals
      */
 
-    Length operator "" _metres(unsigned long long int val){
-    }
+    Length operator "" _metres(unsigned long long int val);
     Mass operator "" _kilograms(unsigned long long int val);
     Time operator "" _seconds(unsigned long long int val);
     Current operator "" _amperes(unsigned long long int val);
