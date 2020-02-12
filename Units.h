@@ -179,7 +179,7 @@ namespace phy {
    */
   template<typename ResQty, typename U, typename R>
   ResQty qtyCast(Qty<U,R> q){
-    static_assert(std::is_same<ResQty::Unit, U>::value); // L'arrivée n'a pas la même unité que le départ
+    static_assert(std::is_same<typename ResQty::Unit, U>::value); // L'arrivée n'a pas la même unité que le départ
     ResQty ret = ResQty();
     ret += q;
     return ret;
