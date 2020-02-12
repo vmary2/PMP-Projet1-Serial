@@ -21,6 +21,9 @@ namespace phy {
     static constexpr int candela = Candela;
   };
 
+
+namespace details {
+
   template<class U1, class U2>
   using Unit_multiply = Unit<U1::metre + U2::metre, U1::kilogram + U2::kilogram, U1::second + U2::second, U1::ampere + U2::ampere, U1::kelvin + U2::kelvin, U1::mole + U2::mole, U1::candela + U2::candela>;
 
@@ -28,9 +31,7 @@ namespace phy {
   template<class U1, class U2>
   using Unit_divide = Unit<U1::metre - U2::metre, U1::kilogram - U2::kilogram, U1::second - U2::second, U1::ampere - U2::ampere, U1::kelvin - U2::kelvin, U1::mole - U2::mole, U1::candela - U2::candela>;
 
-
-
-namespace details {
+}
 
   /*
    * Various type aliases
@@ -44,7 +45,7 @@ namespace details {
   using Mole      = Unit<0,0,0,0,0,1,0>;
   using Candela   = Unit<0,0,0,0,0,0,1>;
   using Radian    = Unit<0,0,0,0,0,0,0>; // metre \ metre
-}
+
 
   /*
    * A quantity is a value associated with a unit and a ratio
@@ -73,7 +74,6 @@ namespace details {
   };
 
 
-namespace details {
   /*
    * Various quantities
    */
@@ -95,7 +95,6 @@ namespace details {
   using Foot = Qty<Metre, std::ratio<1000000, 3280840>>;
   using Inch = Qty<Metre, std::ratio<1000000, 39370079>>;
 
-}
   /*
    * Comparison operators
    */
@@ -151,7 +150,7 @@ namespace details {
   }
 
   template<typename U1, typename R1, typename U2, typename R2>
-  Qty<Unit_multiply<U1, U2>, std::ratio_multiply<R1, R2>> operator*(Qty<U1, R1> q1, Qty<U2, R2> q2){
+  Qty<details::Unit_multiply<U1, U2>, std::ratio_multiply<R1, R2>> operator*(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using Ratio = std::ratio_multiply<R1, R2>;
     using Unit = Unit_multiply<U1, U2>;
     Qty<Unit, Ratio> ret;
@@ -160,7 +159,7 @@ namespace details {
   }
 
   template<typename U1, typename R1, typename U2, typename R2>
-  Qty<Unit_divide<U1, U2>, std::ratio_divide<R1, R2>> operator/(Qty<U1, R1> q1, Qty<U2, R2> q2){
+  Qty<details::Unit_divide<U1, U2>, std::ratio_divide<R1, R2>> operator/(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using Ratio = std::ratio_divide<R1, R2>;
     using Unit = Unit_divide<U1, U2>;
     Qty<Unit, Ratio> ret;
@@ -181,13 +180,15 @@ namespace details {
      * Some user-defined literals
      */
 
-    details::Length operator "" _metres(unsigned long long int val);
-    details::Mass operator "" _kilograms(unsigned long long int val);
-    details::Time operator "" _seconds(unsigned long long int val);
-    details::Current operator "" _amperes(unsigned long long int val);
-    details::Temperature operator "" _kelvins(unsigned long long int val);
-    details::Amount operator "" _moles(unsigned long long int val);
-    details::LuminousIntensity operator "" _candelas(unsigned long long int val);
+    Length operator "" _metres(unsigned long long int val){
+
+    }
+    Mass operator "" _kilograms(unsigned long long int val);
+    Time operator "" _seconds(unsigned long long int val);
+    Current operator "" _amperes(unsigned long long int val);
+    Temperature operator "" _kelvins(unsigned long long int val);
+    Amount operator "" _moles(unsigned long long int val);
+    LuminousIntensity operator "" _candelas(unsigned long long int val);
 
   }
 
