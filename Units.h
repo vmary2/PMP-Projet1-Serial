@@ -2,6 +2,7 @@
 #define UNITS_H
 
 #include <cstdint>
+#include <iostream>
 #include <ratio>
 
 
@@ -67,13 +68,17 @@ namespace phy {
 
     template<typename ROther>
     Qty& operator+=(Qty<U, ROther> other){
-      this->value = (this->value * R::num / R::den + other.value * ROther::num / ROther::den) * R::den / R::num;
+      using Ratio = std::ratio_divide<ROther, R>;
+      std::cerr << this->value << " + " << other.value << " * " << Ratio::num << " / " << Ratio::den << " = "; 
+      this->value = this->value + other.value * Ratio::num / Ratio::den;
+      std::cerr << this->value << std::endl;
       return *this;
     }
 
     template<typename ROther>
     Qty& operator-=(Qty<U, ROther> other){
-      this->value = (this->value * R::num / R::den - other.value * ROther::num / ROther::den) * R::den / R::num;
+      using Ratio = std::ratio_divide<ROther, R>;
+      this->value = this->value - other.value * Ratio::num / Ratio::den;
       return *this;
     }
 
@@ -107,7 +112,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator==(Qty<U, R1> q1, Qty<U, R2> q2){
-    return q1.value * R1::num / R1::den == q2.value * R2::num /R2::den; 
+    return q1.value * R1::num / R1::den = q2.value * R2::num /R2::den;
   }
 
   template<typename U, typename R1, typename R2>
@@ -140,37 +145,39 @@ namespace phy {
    */
 
   template<typename U, typename R1, typename R2>
-  Qty<U, std::ratio_add<R1, R2>> operator+(Qty<U, R1> q1, Qty<U, R2> q2){
-    using Ratio = std::ratio_add<R1, R2>;
-    Qty<U, Ratio> ret;
-    ret.value = (q1.value * R1::num / R1::den + q2.value * R2::num / R2::den) * Ratio::den / Ratio::num;
-    return ret;
+  Qty<U, typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type> operator+(Qty<U, R1> q1, Qty<U, R2> q2){
+    using TargetRatio = typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type;
+    using ConvertionRatio = std::ratio_divide<R1, R2>;
+    if(std::is_same<TargetRatio, R1>()){ // R1 -> target
+      return Qty<U, TargetRatio>( q1.value + q2.value * ConvertionRatio::den / ConvertionRatio::num);
+    }
+    // R2 -> target
+    return Qty<U, TargetRatio>( q1.value * ConvertionRatio::num / ConvertionRatio::den + q2.value);
   }
 
   template<typename U, typename R1, typename R2>
-  Qty<U, std::ratio_subtract<R1, R2>> operator-(Qty<U, R1> q1, Qty<U, R2> q2){
-    using Ratio = std::ratio_subtract<R1, R2>;
-    Qty<U, Ratio> ret;
-    ret.value = (q1.value * R1::num / R1::den - q2.value * R2::num / R2::den) * Ratio::den / Ratio::num;
-    return ret;
+  Qty<U, typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type> operator-(Qty<U, R1> q1, Qty<U, R2> q2){
+    using TargetRatio = typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type;
+    using ConvertionRatio = std::ratio_divide<R1, R2>;
+    if(std::is_same<TargetRatio, R1>()){ // R1 -> target
+      return Qty<U, TargetRatio>( q1.value - q2.value * ConvertionRatio::den / ConvertionRatio::num);
+    }
+    // R2 -> target
+    return Qty<U, TargetRatio>( q1.value * ConvertionRatio::num / ConvertionRatio::den - q2.value);
   }
 
   template<typename U1, typename R1, typename U2, typename R2>
   Qty<details::Unit_multiply<U1, U2>, std::ratio_multiply<R1, R2>> operator*(Qty<U1, R1> q1, Qty<U2, R2> q2){
-    using Ratio = std::ratio_multiply<R1, R2>;
-    using Unit = details::Unit_multiply<U1, U2>;
-    Qty<Unit, Ratio> ret;
-    ret.value = (q1.value * R1::num / R1::den * q2.value * R2::num / R2::den) * Ratio::den / Ratio::num;
-    return ret;
+    using TargetRatio = std::ratio_multiply<R1, R2>;
+    using TargetUnit = details::Unit_multiply<U1, U2>;
+    return Qty<TargetUnit, TargetRatio>(q1.value * R2::num / R2::den * q2.value * R1::num / R1::den);
   }
 
   template<typename U1, typename R1, typename U2, typename R2>
   Qty<details::Unit_divide<U1, U2>, std::ratio_divide<R1, R2>> operator/(Qty<U1, R1> q1, Qty<U2, R2> q2){
-    using Ratio = std::ratio_divide<R1, R2>;
-    using Unit = details::Unit_divide<U1, U2>;
-    Qty<Unit, Ratio> ret;
-    ret.value = ( (q1.value * R1::num / R1::den) / (q2.value * R2::num / R2::den) ) * Ratio::den / Ratio::num;
-    return ret;
+    using TargetRatio = std::ratio_divide<R1, R2>;
+    using TargetUnit = details::Unit_divide<U1, U2>;
+    return Qty<TargetUnit, TargetRatio>(q1.value * R2::num / R2::den / q2.value * R1::num / R1::den);
   }
 
 
