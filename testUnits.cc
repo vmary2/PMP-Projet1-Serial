@@ -42,6 +42,15 @@ TEST(TestUnits, AdditionTestMeterSameRatio){
     EXPECT_EQ(lhs.value, 8);
 }
 
+TEST(TestUnits, AdditionTestDifferenceBetweenOperators){
+    phy::Qty<phy::Metre, std::ratio<1>> lhs(3);
+    phy::Qty<phy::Metre, std::milli> rhs(3);
+    auto ResAdd = lhs + rhs;
+    lhs += rhs;
+    EXPECT_EQ(ResAdd.value, 3003);  
+    EXPECT_EQ(lhs.value, 3);
+}
+
 TEST(TestUnits, SoustractionTestMeterSameRatio){
     phy::Qty<phy::Metre, std::ratio<1>> lhs(5);
     phy::Qty<phy::Metre, std::ratio<1>> rhs(3);
@@ -58,6 +67,15 @@ TEST(TestUnits, SoustractionTestMeterDifferentRatio){
     lhs -= rhs;
     EXPECT_EQ(ResSub.value, -17);
     EXPECT_EQ(lhs.value, -17);
+}
+
+TEST(TestUnits, SoustractionTestDifferenceBetweenOperators){
+    phy::Qty<phy::Metre, std::ratio<1>> lhs(3);
+    phy::Qty<phy::Metre, std::milli> rhs(3);
+    auto ResAdd = lhs - rhs;
+    lhs -= rhs;
+    EXPECT_EQ(ResAdd.value, 2997);  
+    EXPECT_EQ(lhs.value, 3);
 }
 
 TEST(TestUnits, MultiplicationTestMeterSameRatio){
@@ -112,8 +130,89 @@ TEST(TestUnits, DivisionTestMeterRhsLower){
 TEST(TestUnits, CastTest){
     phy::Qty<phy::Metre ,std::milli> mm(32);
     auto nm = phy::qtyCast<phy::Qty<phy::Metre, std::nano>>(mm);
-    printf("value : %ld\n", nm.value);
+    EXPECT_EQ(nm.value, 32000000);
 }
+
+TEST(TestUnits, CastWeirdQuanties){
+    phy::Qty<phy::Metre> m(25);
+    auto inch = phy::qtyCast<phy::Inch>(m);
+    EXPECT_EQ(inch.value, 984);
+    auto yard = phy::qtyCast<phy::Yard>(m);
+    EXPECT_EQ(yard.value, 27);
+    auto foot = phy::qtyCast<phy::Foot>(m);
+    EXPECT_EQ(foot.value, 82);
+    phy::Qty<phy::Metre, std::kilo> km(10);
+    auto mile = phy::qtyCast<phy::Mile>(km);
+    EXPECT_EQ(mile.value, 6);
+}
+
+TEST(TestUnits, AdditionWeirdQuantitiesAndMeters){
+    auto m = phy::Qty<phy::Metre>(30);
+    auto inch = phy::Inch(100);
+    auto resInchM = inch + m;
+    EXPECT_EQ(resInchM.value, 1281); //Result is in inches because inches are smaller than Metre
+    auto yard = phy::Yard(100);
+    auto resYardM = yard + m;
+    EXPECT_EQ(resYardM.value, 132);  //Result is in yards because yards are smaller than Metre
+    auto foot = phy::Foot(100);
+    auto resFootM = foot + m;
+    EXPECT_EQ(resFootM.value, 198);  //Result is in feet because feet are smaller than Metre
+    auto km = phy::Qty<phy::Metre, std::kilo>(30);
+    auto mile = phy::Mile(100);
+    auto resMileKm = mile + km;
+    EXPECT_EQ(resMileKm.value, 190); //Result is in kilometre because kilometres are smaller than Miles
+}
+
+TEST(TestUnits, SoustractionWeirdQuantitiesAndMeters){
+    auto m = phy::Qty<phy::Metre>(30);
+    auto inch = phy::Inch(100);
+    auto resInchM = m - inch;
+    EXPECT_EQ(resInchM.value, 1081); //Result is in inches because inches are smaller than Metre
+    auto yard = phy::Yard(100);
+    auto resYardM = yard - m;
+    EXPECT_EQ(resYardM.value, 68);  //Result is in yards because yards are smaller than Metre
+    auto foot = phy::Foot(100);
+    auto resFootM = foot - m;
+    EXPECT_EQ(resFootM.value, 2);  //Result is in feet because feet are smaller than Metre
+    auto km = phy::Qty<phy::Metre, std::kilo>(30);
+    auto mile = phy::Mile(100);
+    auto resMileKm = mile - km;
+    EXPECT_EQ(resMileKm.value, 130); //Result is in kilometre because kilometres are smaller than Miles
+}
+
+TEST(TestUnits, MultiplicationWeirdQuantitiesAndMeters){
+    auto m = phy::Qty<phy::Metre>(30);
+    auto inch = phy::Inch(100);
+    auto resInchM = inch * m;
+    EXPECT_EQ(resInchM.value, 76);   //Result is in square meters
+    auto yard = phy::Yard(100);
+    auto resYardM = yard * m;
+    EXPECT_EQ(resYardM.value, 2743); //Result is in square meters
+    auto foot = phy::Foot(100);
+    auto resFootM = foot * m;
+    EXPECT_EQ(resFootM.value, 914);  //Result is in squares meters
+    auto km = phy::Qty<phy::Metre, std::kilo>(30);
+    auto mile = phy::Mile(100);
+    auto resMileKm = mile * km;
+    EXPECT_EQ(resMileKm.value, 4827000000); //Result is in square meter
+}
+
+/*TEST(TestUnits, DivisionWeirdQuantitiesAndMeters){
+    auto m = phy::Qty<phy::Metre>(30);
+    auto inch = phy::Inch(100);
+    auto resInchM = m / inch;
+    EXPECT_EQ(resInchM.value, 11);   //Result doesn't have an unit
+    auto yard = phy::Yard(100);
+    auto resYardM = m / yard;
+    EXPECT_EQ(resYardM.value, 2743);
+    auto foot = phy::Foot(100);
+    auto resFootM = m / foot;
+    EXPECT_EQ(resFootM.value, 914);
+    auto km = phy::Qty<phy::Metre, std::kilo>(30);
+    auto mile = phy::Mile(100);
+    auto resMileKm = mile / km;
+    EXPECT_EQ(resMileKm.value, 4827000000); //Result is in square meter
+}*/
 
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
