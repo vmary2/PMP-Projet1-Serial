@@ -114,7 +114,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator==(Qty<U, R1> q1, Qty<U, R2> q2){
-    return q1.value * R1::num / R1::den = q2.value * R2::num /R2::den;
+    return q1.value * R1::num / R1::den == q2.value * R2::num /R2::den;
   }
 
   template<typename U, typename R1, typename R2>
