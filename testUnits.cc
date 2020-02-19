@@ -197,23 +197,119 @@ TEST(TestUnits, MultiplicationWeirdQuantitiesAndMeters){
     EXPECT_EQ(resMileKm.value, 4827000000); //Result is in square meter
 }
 
-/*TEST(TestUnits, DivisionWeirdQuantitiesAndMeters){
-    auto m = phy::Qty<phy::Metre>(30);
-    auto inch = phy::Inch(100);
-    auto resInchM = m / inch;
-    EXPECT_EQ(resInchM.value, 11);   //Result doesn't have an unit
-    auto yard = phy::Yard(100);
-    auto resYardM = m / yard;
-    EXPECT_EQ(resYardM.value, 2743);
-    auto foot = phy::Foot(100);
-    auto resFootM = m / foot;
-    EXPECT_EQ(resFootM.value, 914);
-    auto km = phy::Qty<phy::Metre, std::kilo>(30);
-    auto mile = phy::Mile(100);
-    auto resMileKm = mile / km;
-    EXPECT_EQ(resMileKm.value, 4827000000); //Result is in square meter
-}*/
+//Not doing divisions using weird quantities because fuck this shit.
 
+TEST(TestUnits, ComparaisonEqual){
+    auto q1 = phy::Qty<phy::Metre>(30);
+    auto q2 = phy::Qty<phy::Metre>(30);
+    EXPECT_TRUE(q1==q2);
+    EXPECT_FALSE(q1!=q2);
+    auto q3 = phy::Qty<phy::Metre>(50);
+    EXPECT_FALSE(q1==q3);
+    EXPECT_TRUE(q1!=q3);
+}
+
+TEST(TestUnits, ComparaisonEqualDifferentRatio){
+    auto q1 = phy::Qty<phy::Metre, std::kilo>(3);
+    auto q2 = phy::Qty<phy::Metre>(3000);
+    EXPECT_TRUE(q1==q2);
+    EXPECT_FALSE(q1!=q2);
+    auto q3 = phy::Qty<phy::Metre>(30);
+    EXPECT_FALSE(q1==q3);
+    EXPECT_TRUE(q1!=q3);
+}
+
+TEST(TestUnits, ComparaisonInferior){
+    auto q1 = phy::Qty<phy::Metre>(30);
+    auto q2 = phy::Qty<phy::Metre>(30);
+    EXPECT_FALSE(q1<q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_FALSE(q1<q3);
+    EXPECT_TRUE(q3<q1);
+}
+
+TEST(TestUnits, ComparaisonInferiorDifferentRatio){
+    auto q1 = phy::Qty<phy::Metre,std::kilo>(3);
+    auto q2 = phy::Qty<phy::Metre>(3000);
+    EXPECT_FALSE(q1<q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_FALSE(q1<q3);
+    EXPECT_TRUE(q3<q1);
+}
+
+TEST(TestUnits, ComparaisonInferiorOrEqual){
+    auto q1 = phy::Qty<phy::Metre>(30);
+    auto q2 = phy::Qty<phy::Metre>(30);
+    EXPECT_TRUE(q1<=q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_FALSE(q1<=q3);
+    EXPECT_TRUE(q3<=q1);
+}
+
+TEST(TestUnits, ComparaisonInferiorOrEqualDifferentRatio){
+    auto q1 = phy::Qty<phy::Metre,std::kilo>(3);
+    auto q2 = phy::Qty<phy::Metre>(3000);
+    EXPECT_TRUE(q1<=q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_FALSE(q1<=q3);
+    EXPECT_TRUE(q3<=q1);
+}
+
+TEST(TestUnits, ComparaisonSuperior){
+    auto q1 = phy::Qty<phy::Metre>(30);
+    auto q2 = phy::Qty<phy::Metre>(30);
+    EXPECT_FALSE(q1>q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_TRUE(q1>q3);
+    EXPECT_FALSE(q3>q1);
+}
+
+TEST(TestUnits, ComparaisonSuperiorDifferentRatio){
+    auto q1 = phy::Qty<phy::Metre,std::kilo>(3);
+    auto q2 = phy::Qty<phy::Metre>(3000);
+    EXPECT_FALSE(q1>q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_TRUE(q1>q3);
+    EXPECT_FALSE(q3>q1);
+}
+
+TEST(TestUnits, ComparaisonSuperiorOrEqual){
+    auto q1 = phy::Qty<phy::Metre>(30);
+    auto q2 = phy::Qty<phy::Metre>(30);
+    EXPECT_TRUE(q1>=q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_TRUE(q1>=q3);
+    EXPECT_FALSE(q3>=q1);
+}
+
+TEST(TestUnits, ComparaisonSuperiorOrEqualDifferentRatio){
+    auto q1 = phy::Qty<phy::Metre,std::kilo>(3);
+    auto q2 = phy::Qty<phy::Metre>(3000);
+    EXPECT_TRUE(q1>=q2);
+    auto q3 = phy::Qty<phy::Metre>(20);
+    EXPECT_TRUE(q1>=q3);
+    EXPECT_FALSE(q3>=q1);
+}
+
+TEST(TestUnits, CompareTwoDivs){
+    auto l1 = 4_metres;
+    auto l2 = 2_seconds;
+    auto l3 = 2_metres;
+    auto l4 = 1_seconds;
+    auto res1 = l1 / l2;
+    auto res2 = l3 / l4;
+    EXPECT_TRUE(res1 == res2);
+}
+
+TEST(TestUnits, CompareTwoMults){
+    auto l1 = 3_metres;
+    auto l2 = 3_seconds;
+    auto l3 = 3_metres;
+    auto l4 = 3_seconds;
+    auto res1 = l1 * l2;
+    auto res2 = l3 * l4;
+    EXPECT_TRUE(res1 == res2);
+}
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
