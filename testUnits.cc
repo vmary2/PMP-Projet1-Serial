@@ -11,8 +11,8 @@ TEST(TestUnits, VelocityTest){
     EXPECT_TRUE(velocity.value == 27);
 
     //Type verification of velocity
-    phy::Qty<phy::Unit<1,0,-1,0,0,0,0>, std::ratio<1>> velocity2(33);
-    EXPECT_NO_THROW(velocity + velocity2);
+    phy::Qty<phy::Unit<1,0,-1,0,0,0,0>, std::ratio<1>> velocity2(27);
+    EXPECT_EQ(velocity, velocity2);
 }
 
 TEST(TestUnits, AdditionTestMeterDifferentRatio){
@@ -310,6 +310,23 @@ TEST(TestUnits, CompareTwoMults){
     auto res2 = l3 * l4;
     EXPECT_TRUE(res1 == res2);
 }
+
+TEST(TestUnits, SquareMeterTimesSquareKiloMeters){
+    auto squareM = 2_metres * 2_metres;             //4m²
+    auto km1 = phy::Qty<phy::Metre, std::ratio<10,1>>(2);
+    auto km2 = phy::Qty<phy::Metre, std::ratio<10,1>>(2);
+    auto squareKM = km1 * km2;                      //4dam²
+    auto res = squareM * squareKM;
+    EXPECT_EQ(res.value, 160000);
+}
+
+TEST(TestUnits, MilePerHour){
+    auto miles = phy::Mile(100);
+    auto hour = phy::Qty<phy::Second, std::ratio<3600>>(1);
+    auto res = miles / hour;
+    EXPECT_TRUE(res.value = 44);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

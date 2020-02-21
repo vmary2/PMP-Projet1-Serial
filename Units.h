@@ -69,18 +69,14 @@ namespace phy {
     template<typename ROther>
     Qty& operator+=(Qty<U, ROther> other){
       using Ratio = std::ratio_divide<ROther, R>;
-      std::cerr << this->value << " + " << other.value << " * " << Ratio::num << " / " << Ratio::den << " = "; 
       this->value = this->value + other.value * Ratio::num / Ratio::den;
-      std::cerr << this->value << std::endl;
       return *this;
     }
 
     template<typename ROther>
     Qty& operator-=(Qty<U, ROther> other){
       using Ratio = std::ratio_divide<ROther, R>;
-      std::cerr << this->value << " - " << other.value << " * " << Ratio::num << " / " << Ratio::den << " = ";
       this->value = this->value - other.value * Ratio::num / Ratio::den;
-      std::cerr << this->value << std::endl;
       return *this;
     }
 
@@ -151,11 +147,9 @@ namespace phy {
     using TargetRatio = typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type;
     using ConvertionRatio = std::ratio_divide<R1, R2>;
     if(std::is_same<TargetRatio, R1>()){ // R1 -> target
-      std::cerr << q1.value << " + " << q2.value << " * " << ConvertionRatio::den << " / " << ConvertionRatio::num << " = " << q1.value + q2.value * ConvertionRatio::den / ConvertionRatio::num << std::endl;
       return Qty<U, TargetRatio>( q1.value + q2.value * ConvertionRatio::den / ConvertionRatio::num);
     }
     // R2 -> target
-    std::cerr << q1.value << " * " << ConvertionRatio::num << " / " << ConvertionRatio::den << " + " << q2.value << " = " << q1.value * ConvertionRatio::num / ConvertionRatio::den + q2.value << std::endl;
     return Qty<U, TargetRatio>( q1.value * ConvertionRatio::num / ConvertionRatio::den + q2.value);
   }
 
@@ -164,11 +158,9 @@ namespace phy {
     using TargetRatio = typename std::conditional<std::ratio_less_equal<R1, R2>::value, R1, R2>::type;
     using ConvertionRatio = std::ratio_divide<R1, R2>;
     if(std::is_same<TargetRatio, R1>()){ // R1 -> target
-      std::cerr << q1.value << " - " << q2.value << " * " << ConvertionRatio::den << " / " << ConvertionRatio::num << " = " << q1.value - q2.value * ConvertionRatio::den / ConvertionRatio::num << std::endl;
       return Qty<U, TargetRatio>( q1.value - q2.value * ConvertionRatio::den / ConvertionRatio::num);
     }
     // R2 -> target
-    std::cerr << q1.value << " * " << ConvertionRatio::num << " / " << ConvertionRatio::den << " - " << q2.value << " = " << q1.value * ConvertionRatio::num / ConvertionRatio::den - q2.value << std::endl;
     return Qty<U, TargetRatio>( q1.value * ConvertionRatio::num / ConvertionRatio::den - q2.value);
   }
 
@@ -176,7 +168,6 @@ namespace phy {
   Qty<details::Unit_multiply<U1, U2>, std::ratio_multiply<R1, R2>> operator*(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using TargetRatio = std::ratio_multiply<R1, R2>;
     using TargetUnit = details::Unit_multiply<U1, U2>;
-    std::cerr << q1.value << " * " << R2::num << " / " << R2::den << " * " << q2.value << " * " << R1::num << " / " << R1::den << " = " << (q1.value * R2::num / R2::den) * (q2.value * R1::num / R1::den) << std::endl;
     return Qty<TargetUnit, TargetRatio>(q1.value * R2::num / R2::den * q2.value * R1::num / R1::den);
   }
 
@@ -184,7 +175,6 @@ namespace phy {
   Qty<details::Unit_divide<U1, U2>, std::ratio_divide<R1, R2>> operator/(Qty<U1, R1> q1, Qty<U2, R2> q2){
     using TargetRatio = std::ratio_divide<R1, R2>;
     using TargetUnit = details::Unit_divide<U1, U2>;
-    std::cerr << q1.value << " * " << R1::num << " / " << R1::den << " / " << q2.value << " * " << R2::num << " / " << R2::den << " = " << (q1.value * R1::num / R1::den) / (q2.value * R2::num / R2::den) << std::endl;
     return Qty<TargetUnit, TargetRatio>((q1.value * (R1::num / R1::den)) / (q2.value * (R2::num / R2::den)));
   }
 
